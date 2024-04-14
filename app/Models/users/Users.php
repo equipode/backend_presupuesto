@@ -17,12 +17,7 @@ class Users extends Model
 
     public function roles()
     {
-        return $this->belongsTo(roles::class, 'fk_cargo', 'pk_rol');
-    }
-
-    public function locales()
-    {
-        return $this->belongsTo(locales::class, 'fk_local', 'pk_local');
+        return $this->belongsTo(roles::class, 'fk_rol', 'pk_rol');
     }
     protected $hidden = [
         'password',

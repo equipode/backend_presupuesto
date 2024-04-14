@@ -61,9 +61,9 @@ class authController extends Controller
     {
         $user = auth()->user();
         $user_id = $user->id;
+        $foto_usuario = $user->foto_usuario;
         $estado_user = $user->estado_user;
-        $pictureUser = $user->picture_user;
-        $rol_user = $user->fk_cargo;
+        $rol_user = $user->fk_rol;
 
 
 
@@ -81,7 +81,7 @@ class authController extends Controller
             'fechaActual' => $fechaActual,
             'user_id' => $user_id,
             'estado_user' => $estado_user,
-            'picture' => $pictureUser,
+            'foto_usuario' => $foto_usuario,
             'nombreRol' => $nombreRol,
             'rol' => $rol_user,
             'tipo_rol' => $tipo_rol

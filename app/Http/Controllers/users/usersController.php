@@ -25,7 +25,7 @@ class usersController extends Controller
 
         $rol_userV = $tableRoles->tipo;
 
-        return $rol_userV == 1 || $rol_userV == 2 ? true : false;
+        return $rol_userV == 1 ? true : false;
     }
 
     public function index()
@@ -105,8 +105,9 @@ class usersController extends Controller
             $request->validate([
                 'email' => 'required|email|unique:users,email|min:6',
                 'password' => 'required|min:6',
-                'picture_user' => 'required|image|max:10240',
-                'fk_cargo' => 'required|integer',
+                'foto_usuario' => 'required|image|max:10240',
+                'fk_rol' => 'required|integer',
+                'estado_user' => 'required|integer',
                 'rol_user' => 'required|integer',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -119,14 +120,15 @@ class usersController extends Controller
         if ($rol) {
 
             $url = 'storage/users';
-            $image = $request->file('picture_user');
+            $image = $request->file('foto_usuario');
             $imageUrl = $this->savePdfImage($url, $image);
 
             $user = new Users();
             $user->email = $request->input('email');
             $user->password = Hash::make($request->input('password'));
-            $user->picture_user = $imageUrl;
-            $user->fk_cargo = $request->input('fk_cargo');
+            $user->foto_usuario = $imageUrl;
+            $user->fk_rol = $request->input('fk_rol');
+            $user->estado_user = $request->input('estado_user');
             $user->save();
 
             return response()->json([
@@ -139,40 +141,15 @@ class usersController extends Controller
         }
     }
 
-    public function createUserClientPublic(Request $request)
-    {
-        try {
-            $request->validate([
-                'email' => 'required|email|unique:users,email|min:6',
-                'password' => 'required|min:6',
-                'picture_user' => 'required|image|max:10240'
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
-        }
-
-        $url = 'storage/users';
-        $image = $request->file('picture_user');
-        $imageUrl = $this->savePdfImage($url, $image);
-
-        $user = new Users();
-        $user->email = $request->input('email');
-        $user->password = Hash::make($request->input('password'));
-        $user->picture_user = $imageUrl;
-        $user->fk_cargo = 2;
-        $user->save();
-
-        return response()->json([
-            'ok' => 'Usuario creado'
-        ], 201);
-    }
-
     public function update(Request $request, $id = 0)
     {
         try {
             $request->validate([
-                'picture_user' => 'nullable|image|max:10240',
-                'fk_cargo' => 'required|integer',
+                'email' => 'required|email|min:6',
+                'password' => 'required|min:6',
+                'foto_usuario' => 'nullable|image|max:10240',
+                'estado_user' => 'required|integer',
+                'fk_rol' => 'required|integer',
                 'rol_user' => 'required|integer',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -194,69 +171,33 @@ class usersController extends Controller
                 ], 404);
             }
 
-            if ($request->hasFile('picture_user')) {
-                $urlImagenDelete = $user->picture_user;
+            if ($request->hasFile('foto_usuario')) {
+                $urlImagenDelete = $user->foto_usuario;
                 $this->deleteImage($urlImagenDelete);
                 $url = 'storage/users';
-                $image = $request->file('picture_user');
+                $image = $request->file('foto_usuario');
                 $imageUrl = $this->savePdfImage($url, $image);
 
-                $user->picture_user = $imageUrl;
-                $user->fk_cargo = $request->input('fk_cargo');
+                $user->email = $request->email;
+                $user->password = Hash::make($request->password);
+                $user->foto_usuario = $imageUrl;
+                $user->estado_user = $request->input('estado_user');
+                $user->fk_rol = $request->input('fk_rol');
                 $user->save();
                 return response()->json([
                     'ok' => 'Usuario actualizado',
                     'url' => $imageUrl
                 ], 201);
             } else {
-                $user->fk_cargo = $request->input('fk_cargo');
+                $user->email = $request->email;
+                $user->password = Hash::make($request->password);
+                $user->estado_user = $request->input('estado_user');
+                $user->fk_rol = $request->input('fk_rol');
                 $user->save();
                 return response()->json([
                     'ok' => 'Usuario actualizado'
                 ], 201);
             }
-        } else {
-            return response()->json([
-                'error' => 'Access prohibited'
-            ], 403);
-        }
-    }
-
-    public function updateCredentialsAcces(Request $request, $id = 0)
-    {
-        try {
-            $request->validate([
-                'email' => 'required|email|min:6|unique:users,email,' . $id,
-                'password' => 'required|min:6',
-                'rol_user' => 'required|integer'
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
-        }
-
-        $rol_user = $request->rol_user;
-        $rol = $this->validateRolUser($rol_user);
-
-        if ($rol) {
-
-            if ($id <= 0) {
-                return response()->json([
-                    'error' => 'debe enviar el id del user'
-                ], 404);
-            }
-            $user = Users::find($id);
-            if (is_null($user)) {
-                return response()->json([
-                    'error' => 'no se pudo realizar correctamente con este id ' . $id . ''
-                ], 404);
-            }
-
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            $user->save();
-            return response()->json([
-                'ok' => 'Credenciales actualizadas'
-            ], 201);
         } else {
             return response()->json([
                 'error' => 'Access prohibited'
@@ -291,7 +232,7 @@ class usersController extends Controller
                 ], 404);
             }
 
-            $urlImagenDelete = $user->picture_user;
+            $urlImagenDelete = $user->foto_usuario;
             $this->deleteImage($urlImagenDelete);
 
             $user->delete();
