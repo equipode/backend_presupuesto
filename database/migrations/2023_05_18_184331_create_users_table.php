@@ -34,4 +34,3 @@ return new class extends Migration
         }
 };
 
-// php artisan make:migration create_clase_contratos_table --path=database/migrations/trabajadores
