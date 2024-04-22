@@ -9,6 +9,8 @@ use App\Http\Controllers\users\usersController;
 
 Route::post('v1/login', [authController::class, 'login']);
 Route::get('v1/pruebas', [authController::class, 'pruebas']);
+// Route::post('usuarios', [usersController::class, 'create']);
+
 
 Route::group(['middleware' => ['jwt.verify']], function () {
 
