@@ -19,4 +19,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::prefix('v1')->group(function () {
         require __DIR__ . '/users/api_users.php';
     });
+    Route::prefix('v1')->group(function () {
+        require __DIR__ . '/ingresos/api_ingreso.php';
+    });
 });
