@@ -21,4 +21,7 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::prefix('v1')->group(function () {
         require __DIR__ . '/ingresos/api_ingreso.php';
     });
+    Route::prefix('v1')->group(function () {
+        require __DIR__ . '/inversion_venta/api_inversion_venta.php';
+    });
 });
