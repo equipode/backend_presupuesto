@@ -16,4 +16,25 @@ class ventasController extends Controller
 
         return response()->json($ventas);
     }
+
+    public function create(Request $request)
+    {
+        try{
+            $request->validate([
+                'cliente' => 'required|min:3|max:11',
+                'fk_ve_hiculo' => 'required|integer'
+            ]);
+        } catch(\Illuminate\Validation\ValidationException $e){
+            return response()->json(['errors' => $e->errors()], 422);
+        }
+
+        $ventas = new ventas();
+        $ventas->cliente = $request->cliente; 
+        $ventas->fk_ve_hiculo = $request->fk_ve_hiculo; 
+        $ventas->save();
+
+        return response()->json([
+            'ok' => 'venta creada'
+        ], 201);
+    }
 }
