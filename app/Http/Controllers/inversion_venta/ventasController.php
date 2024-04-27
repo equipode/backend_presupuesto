@@ -29,12 +29,33 @@ class ventasController extends Controller
         }
 
         $ventas = new ventas();
-        $ventas->cliente = $request->cliente; 
-        $ventas->fk_ve_hiculo = $request->fk_ve_hiculo; 
+        $ventas->cliente = $request->cliente;
+        $ventas->fk_ve_hiculo = $request->fk_ve_hiculo;
         $ventas->save();
 
         return response()->json([
             'ok' => 'venta creada'
         ], 201);
     }
+
+    public function destroy(Request $request, int $id = 0)
+    {
+            if ($id <= 0) {
+                return response()->json([
+                    'error' => 'debe enviar el id de la venta para eliminar'
+                ], 404);
+            }
+
+            $ventas = ventas::find($id);
+            if (is_null($ventas)) {
+                return response()->json([
+                    'error' => 'No se pudo realizar correctamente con este id ' . $id . ''
+                ], 404);
+            }
+
+            $ventas->delete();
+            return response()->json([
+                'ok' => 'Venta eliminada'
+            ], 204);
+        }
 }

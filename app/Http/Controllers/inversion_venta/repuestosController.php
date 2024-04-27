@@ -31,14 +31,35 @@ class repuestosController extends Controller
         }
 
         $repuestos = new repuestos();
-        $repuestos->nombre = $request->nombre; 
-        $repuestos->cantidad = $request->cantidad; 
-        $repuestos->precio = $request->precio; 
-        $repuestos->fk_vehiculo = $request->fk_vehiculo; 
+        $repuestos->nombre = $request->nombre;
+        $repuestos->cantidad = $request->cantidad;
+        $repuestos->precio = $request->precio;
+        $repuestos->fk_vehiculo = $request->fk_vehiculo;
         $repuestos->save();
 
         return response()->json([
             'ok' => 'repuesto creado'
         ], 201);
     }
+
+    public function destroy(Request $request, int $id = 0)
+    {
+            if ($id <= 0) {
+                return response()->json([
+                    'error' => 'debe enviar el id del repuesto para eliminar'
+                ], 404);
+            }
+
+            $repuestos = repuestos::find($id);
+            if (is_null($repuestos)) {
+                return response()->json([
+                    'error' => 'No se pudo realizar correctamente con este id ' . $id . ''
+                ], 404);
+            }
+
+            $repuestos->delete();
+            return response()->json([
+                'ok' => 'Repuesto eliminado'
+            ], 204);
+        }
 }

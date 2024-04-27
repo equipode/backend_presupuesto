@@ -31,17 +31,38 @@ class vehiculosController extends Controller
         }
 
         $vehiculo = new vehiculos();
-        $vehiculo->placa = $request->placa; 
-        $vehiculo->marca = $request->marca; 
-        $vehiculo->precio_ingreso = $request->precio_ingreso; 
-        $vehiculo->precio_repuesto = $request->precio_repuesto; 
-        $vehiculo->precio_egreso = $request->precio_egreso; 
+        $vehiculo->placa = $request->placa;
+        $vehiculo->marca = $request->marca;
+        $vehiculo->precio_ingreso = $request->precio_ingreso;
+        $vehiculo->precio_repuesto = $request->precio_repuesto;
+        $vehiculo->precio_egreso = $request->precio_egreso;
         $vehiculo->save();
 
         return response()->json([
             'ok' => 'vehiculo creado'
         ], 201);
     }
+
+    public function destroy(Request $request, int $id = 0)
+    {
+            if ($id <= 0) {
+                return response()->json([
+                    'error' => 'debe enviar el id del vehículo para eliminar'
+                ], 404);
+            }
+
+            $vehiculo = vehiculos::find($id);
+            if (is_null($vehiculo)) {
+                return response()->json([
+                    'error' => 'No se pudo realizar correctamente con este id ' . $id . ''
+                ], 404);
+            }
+
+            $vehiculo->delete();
+            return response()->json([
+                'ok' => 'Vehículo eliminado'
+            ], 204);
+        }
 
 
 }
