@@ -39,7 +39,8 @@ class vehiculosController extends Controller
         $vehiculo->save();
 
         return response()->json([
-            'ok' => 'vehiculo creado'
+            'ok' => 'vehiculo creado',
+            'resp' => $vehiculo
         ], 201);
     }
 
