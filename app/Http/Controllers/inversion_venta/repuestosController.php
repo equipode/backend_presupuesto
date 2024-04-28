@@ -5,6 +5,7 @@ namespace App\Http\Controllers\inversion_venta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\inversion_venta\repuestos;
+use App\Models\inversion_venta\vehiculos;
 
 class repuestosController extends Controller
 {
@@ -24,7 +25,8 @@ class repuestosController extends Controller
                 'nombre' => 'required|min:3|max:11',
                 'cantidad' => 'required|integer',
                 'precio' => 'required|integer',
-                'fk_vehiculo' => 'required|integer'
+                'fk_vehiculo' => 'required|integer',
+                'precio_repuestos' => 'required|integer'
             ]);
         } catch(\Illuminate\Validation\ValidationException $e){
             return response()->json(['errors' => $e->errors()], 422);
@@ -36,6 +38,10 @@ class repuestosController extends Controller
         $repuestos->precio = $request->precio;
         $repuestos->fk_vehiculo = $request->fk_vehiculo;
         $repuestos->save();
+
+        $vehiculo = vehiculos::find($request->fk_vehiculo);
+        $vehiculo->precio_repuesto = $request->precio_repuestos;
+        $vehiculo->save();
 
         return response()->json([
             'ok' => 'repuesto creado'
