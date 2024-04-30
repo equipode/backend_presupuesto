@@ -68,14 +68,13 @@ class vehiculosController extends Controller
                 ], 404);
             }
 
-            $venta = ventas::query()->where('fk_ve_hiculo', '=', $id);
-            if (is_null($venta)) {
+            $venta = ventas::query()->where('fk_ve_hiculo', '=', $id)->count();
+            if ($venta > 0) {
                 return response()->json([
-                    'error' => 'No se pudo realizar correctamente con este id ' . $id . ''
-                ], 404);
+                    'error' => 'No se puede eliminar el vehículo, porque está relacionado con una venta'
+                ], 422);
             }
 
-            $venta->delete();
             $repuesto->delete();
             $vehiculo->delete();
             return response()->json([
