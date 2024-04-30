@@ -5,6 +5,8 @@ namespace App\Http\Controllers\inversion_venta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\inversion_venta\vehiculos;
+use App\Models\inversion_venta\repuestos;
+use App\Models\inversion_venta\ventas;
 
 class vehiculosController extends Controller
 {
@@ -59,6 +61,22 @@ class vehiculosController extends Controller
                 ], 404);
             }
 
+            $repuesto = repuestos::query()->where('fk_vehiculo', '=', $id);
+            if (is_null($repuesto)) {
+                return response()->json([
+                    'error' => 'No se pudo realizar correctamente con este id ' . $id . ''
+                ], 404);
+            }
+
+            $venta = ventas::query()->where('fk_ve_hiculo', '=', $id);
+            if (is_null($venta)) {
+                return response()->json([
+                    'error' => 'No se pudo realizar correctamente con este id ' . $id . ''
+                ], 404);
+            }
+
+            $venta->delete();
+            $repuesto->delete();
             $vehiculo->delete();
             return response()->json([
                 'ok' => 'Vehículo eliminado'
