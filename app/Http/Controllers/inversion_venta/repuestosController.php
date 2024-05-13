@@ -55,9 +55,9 @@ class repuestosController extends Controller
         $repuestos->fk_vehiculo = $request->fk_vehiculo;
         $repuestos->save();
 
-        // $vehiculo = vehiculos::find($request->fk_vehiculo);
-        // $vehiculo->precio_repuesto = $request->precio_repuestos;
-        // $vehiculo->save();
+        $vehiculo = vehiculos::find($request->fk_vehiculo);
+        $vehiculo->precio_repuesto = $request->precio_repuestos;
+        $vehiculo->save();
 
         return response()->json([
             'ok' => 'repuesto creado'
