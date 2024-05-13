@@ -57,7 +57,7 @@ class vehiculosController extends Controller
         try{
             $request->validate([
                 'placa' => 'required|min:3|max:11',
-                'marca' => 'required|min:3|max:11',
+                'marca' => 'required|min:3|max:19',
                 'precio_ingreso' => 'required|integer',
                 'precio_repuesto' => 'required|integer',
                 'precio_egreso' => 'required|integer'

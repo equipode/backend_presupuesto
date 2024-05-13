@@ -38,7 +38,7 @@ class repuestosController extends Controller
     {
         try{
             $request->validate([
-                'nombre' => 'required|min:3|max:11',
+                'nombre' => 'required|min:3|max:19',
                 'cantidad' => 'required|integer',
                 'precio' => 'required|integer',
                 'fk_vehiculo' => 'required|integer',
