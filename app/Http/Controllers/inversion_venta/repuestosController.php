@@ -18,6 +18,22 @@ class repuestosController extends Controller
         return response()->json($repuestos);
     }
 
+    public function repuestosPorIdVehiculo(int $id = 0)
+    {
+        if ($id <= 0) {
+            return response()->json([
+                'error' => 'debe enviar el id del repuesto para eliminar'
+            ], 404);
+        }
+
+        $repuestos = repuestos::query()
+        ->with('repuestoVehiculo')
+        ->where('fk_vehiculo', '=', $id)
+        ->get();
+
+        return response()->json($repuestos);
+    }
+
     public function create(Request $request)
     {
         try{

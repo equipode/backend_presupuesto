@@ -6,6 +6,7 @@ use App\Http\Controllers\inversion_venta\vehiculosController;
 use App\Http\Controllers\inversion_venta\ventasController;
 
 Route::get('repuestos', [repuestosController::class, 'index']);
+Route::get('repuestos/repuestosPorIdVehiculo/{id}', [repuestosController::class, 'repuestosPorIdVehiculo']);
 Route::post('repuestos', [repuestosController::class, 'create']);
 Route::delete('repuestos/{id}', [repuestosController::class, 'destroy']);
 
